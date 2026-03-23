@@ -11,7 +11,7 @@ import SwiftUI
 struct gorevioApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            personnelTabView()
         }
     }
 }
