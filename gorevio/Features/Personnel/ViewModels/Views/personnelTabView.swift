@@ -7,24 +7,26 @@
 
 import SwiftUI
 
-struct personnelTabView: View{
+struct PersonnelTabView: View {
+    @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var taskService: TaskService
+    
     var body: some View {
         TabView {
             PersonnelHomeView()
-                .tabItem{
+                .tabItem {
                     Label("Ana Ekran", systemImage: "house.fill")
                 }
             
             PersonnelTasksView()
-                .tabItem{
+                .tabItem {
                     Label("İşlerim", systemImage: "list.bullet.clipboard.fill")
                 }
             
             PersonnelProfileView()
-                .tabItem{
+                .tabItem {
                     Label("Profil", systemImage: "person.fill")
                 }
         }
-        
     }
 }

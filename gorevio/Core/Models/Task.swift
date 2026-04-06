@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Task: Identifiable{
+struct Task: Identifiable {
     let id: String
     let title: String
     let companyName: String
     let address: String
     let description: String
     let assingnedTo: String
-    let status: TaskStatus
+    var status: TaskStatus
     let createdAt: Date
 }

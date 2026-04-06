@@ -9,12 +9,12 @@ import SwiftUI
 
 struct BigTaskCardView: View {
     
-    let task: Task
+    let task: APITask
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
-            
+            // MARK: - Üst Kısım
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(task.companyName)
@@ -28,7 +28,7 @@ struct BigTaskCardView: View {
                 }
                 
                 Spacer()
-    
+                
                 Text("Devam Ediyor")
                     .font(.caption)
                     .bold()
@@ -42,6 +42,7 @@ struct BigTaskCardView: View {
             Divider()
                 .background(Color.divider)
             
+            // MARK: - Arıza
             VStack(alignment: .leading, spacing: 6) {
                 Text("Arıza")
                     .font(.caption)
@@ -52,11 +53,11 @@ struct BigTaskCardView: View {
                     .lineLimit(3)
             }
             
-            
+            // MARK: - Tarih & Detay
             HStack {
                 Image(systemName: "calendar")
                     .foregroundStyle(Color.secondaryText)
-                Text(task.createdAt.formatted(date: .abbreviated, time: .omitted))
+                Text(task.createdAt)
                     .font(.caption)
                     .foregroundStyle(Color.secondaryText)
                 

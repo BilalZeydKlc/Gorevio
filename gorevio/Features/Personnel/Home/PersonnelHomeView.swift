@@ -8,55 +8,56 @@
 import SwiftUI
 
 struct PersonnelHomeView: View {
-    
-    let tasks = MockData.tasks
+    @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var taskService: TaskService
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
+                    Text("Merhaba, \(authService.currentUser?.name.components(separatedBy: " ").first ?? "") 👋")
+                        .font(.largeTitle).bold().foregroundStyle(Color.primaryText).padding(.horizontal)
                     
-                    Text("Merhaba, Bilal 👋")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundStyle(Color.primaryText)
-                        .padding(.horizontal)
-                    
-                    Text("Mevcut İşler")
-                        .font(.title2)
-                        .bold()
-                        .foregroundStyle(Color.primaryText)
-                        .padding(.horizontal)
-                    
-                    VStack(spacing: 16) {
-                        ForEach(tasks.filter { $0.status == .devamEdiyor }) { task in
-                            NavigationLink(destination: TaskDetailView(task: task)) {
-                                BigTaskCardView(task: task)
+                    if !devamEdenTasks.isEmpty {
+                        Text("Mevcut İşlerin")
+                            .font(.title2).bold().foregroundStyle(Color.primaryText).padding(.horizontal)
+                        
+                        VStack(spacing: 16) {
+                            ForEach(devamEdenTasks) { task in
+                                NavigationLink(destination: TaskDetailView(task: task)) {
+                                    BigTaskCardView(task: task)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
+                        .padding(.horizontal)
+                    } else {
+                        VStack(spacing: 12) {
+                            Image(systemName: "checkmark.circle")
+                                .font(.system(size: 48)).foregroundStyle(Color.secondaryText)
+                            Text("Şu an atanmış görevin yok 🎉")
+                                .font(.subheadline).foregroundStyle(Color.secondaryText)
+                        }
+                        .frame(maxWidth: .infinity).padding(.top, 40)
                     }
-                    .padding(.horizontal)
                 }
                 .padding(.top)
             }
             .background(Color.appBackground)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("GöreviO")
-                        .font(.title2)
-                        .bold()
-                        .foregroundStyle(Color.primaryText)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                    } label: {
-                        Image(systemName: "bell.fill")
-                            .foregroundStyle(Color.primaryText)
-                    }
+                ToolbarItem(placement: .principal) { Text("GöreviO").bold() }
+            }
+            .task {
+                if let userId = authService.currentUser?.id {
+                    try? await taskService.fetchPersonnelTasks(personnelId: userId)
                 }
             }
         }
+    }
+    
+    var devamEdenTasks: [APITask] {
+        // Backend 'bekliyor' kaydetse bile biz devam eden iş sayıyoruz
+        taskService.tasks.filter { $0.status == "devamEdiyor" || $0.status == "bekliyor" }
     }
 }
