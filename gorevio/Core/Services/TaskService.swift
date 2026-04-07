@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UserNotifications
 
 class TaskService: ObservableObject {
     static let shared = TaskService()
@@ -16,26 +17,39 @@ class TaskService: ObservableObject {
     
     private init() {}
     
+    // Tüm görevleri getir (Yönetici için)
     func fetchAllTasks() async throws {
         DispatchQueue.main.async { self.isLoading = true }
-        let tasks: [APITask] = try await NetworkManager.shared.get(endpoint: "/api/tasks")
+        let fetchedTasks: [APITask] = try await NetworkManager.shared.get(endpoint: "/api/tasks")
         DispatchQueue.main.async {
-            self.tasks = tasks
+            self.tasks = fetchedTasks
             self.isLoading = false
         }
     }
     
+    // Personel görevlerini getir ve yeni iş kontrolü yap
     func fetchPersonnelTasks(personnelId: String) async throws {
+        let oldTaskCount = self.tasks.count
+        
         DispatchQueue.main.async { self.isLoading = true }
-        let tasks: [APITask] = try await NetworkManager.shared.get(
+        
+        let fetchedTasks: [APITask] = try await NetworkManager.shared.get(
             endpoint: "/api/tasks/personnel/\(personnelId)"
         )
+        
         DispatchQueue.main.async {
-            self.tasks = tasks
+            self.tasks = fetchedTasks
             self.isLoading = false
+            
+            if self.tasks.count > oldTaskCount && oldTaskCount != 0 {
+                if let lastTask = self.tasks.last {
+                    self.triggerLocalNotification(taskTitle: lastTask.title)
+                }
+            }
         }
     }
     
+    // Yeni görev oluştur
     func createTask(task: NewTaskRequest) async throws {
         let newTask: APITask = try await NetworkManager.shared.post(
             endpoint: "/api/tasks",
@@ -45,6 +59,7 @@ class TaskService: ObservableObject {
             self.tasks.append(newTask)
         }
     }
+    
     
     func completeTask(taskId: String) async throws {
         let body = UpdateTaskRequest(status: "tamamlandi")
@@ -57,5 +72,24 @@ class TaskService: ObservableObject {
                 self.tasks[index] = updatedTask
             }
         }
+    }
+    
+    // MARK: - Yerel Bildirim Tetikleyici
+    func triggerLocalNotification(taskTitle: String) {
+        let content = UNMutableNotificationContent()
+        
+        // Üst Başlık
+        content.title = "Yeni Görev Atandı! 🛠️"
+        
+        // Alt Başlık (İstediğin şekilde güncellendi)
+        content.body = "Yeni atanan görevinizi görmek için dokunun."
+        
+        content.sound = .default
+        content.badge = 1
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request)
     }
 }

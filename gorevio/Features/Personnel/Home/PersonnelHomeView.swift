@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import Combine
 
 struct PersonnelHomeView: View {
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var taskService: TaskService
+    @State private var showNotifications = false
+    
+    let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationStack {
@@ -47,6 +51,42 @@ struct PersonnelHomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) { Text("GöreviO").bold() }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showNotifications = true
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "bell.fill")
+                                .font(.title3)
+                                .foregroundStyle(Color.accent)
+                            
+                            if !devamEdenTasks.isEmpty {
+                                Circle()
+                                    .fill(.red)
+                                    .frame(width: 10, height: 10)
+                                    .offset(x: 2, y: -2)
+                            }
+                        }
+                    }
+                }
+            }
+            .alert("Bildirim Merkezi 🔔", isPresented: $showNotifications) {
+                Button("Anladım", role: .cancel) { }
+            } message: {
+                if let sonIs = devamEdenTasks.first {
+                    Text("Yeni bir görev kaydınız var:\n\n📍 \(sonIs.companyName)\n🛠 \(sonIs.title)\n\nDetaylar için görev listesine göz atın.")
+                } else {
+                    Text("Şu an okunmamış bir bildiriminiz bulunmuyor.")
+                }
+            }
+            .onReceive(timer) { _ in
+                // ÇAKIŞMAYI ÖNLEYEN KRİTİK DEĞİŞİKLİK: _Concurrency.Task
+                _Concurrency.Task {
+                    if let userId = authService.currentUser?.id {
+                        try? await taskService.fetchPersonnelTasks(personnelId: userId)
+                    }
+                }
             }
             .task {
                 if let userId = authService.currentUser?.id {
@@ -57,7 +97,6 @@ struct PersonnelHomeView: View {
     }
     
     var devamEdenTasks: [APITask] {
-        // Backend 'bekliyor' kaydetse bile biz devam eden iş sayıyoruz
         taskService.tasks.filter { $0.status == "devamEdiyor" || $0.status == "bekliyor" }
     }
 }
