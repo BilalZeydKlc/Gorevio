@@ -8,12 +8,10 @@
 import SwiftUI
 import UserNotifications
 
-// 1. BU SINIF DIŞARIDA DURMALI: Uygulama açıkken bildirimi yukarıdan düşüren mekanizma
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // Uygulama açık olsa bile banner (üstten düşen bildirim) ve ses gelsin
         completionHandler([.banner, .list, .sound])
     }
 }
@@ -25,16 +23,14 @@ struct gorevioApp: App {
     @StateObject var companyService = CompanyService.shared
     @StateObject var personnelService = PersonnelService.shared
     
-    // Delegate örneğini burada tutuyoruz
     private let delegate = NotificationDelegate()
     
     init() {
-        // Bildirim izinlerini al
+        
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted { print("Bildirim izni verildi ✅") }
         }
         
-        // 2. KRİTİK NOKTA: iOS'a bu delegeyi mutlaka bildiriyoruz
         UNUserNotificationCenter.current().delegate = delegate
     }
     

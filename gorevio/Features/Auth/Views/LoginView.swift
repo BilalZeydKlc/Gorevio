@@ -17,89 +17,110 @@ struct LoginView: View {
     @State private var errorMessage = ""
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 32) {
-                
-                // MARK: - Logo
-                VStack(spacing: 12) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.accent.opacity(0.15))
-                            .frame(width: 100, height: 100)
-                        Text("G")
-                            .font(.system(size: 48, weight: .bold))
-                            .foregroundStyle(Color.accent)
-                    }
+        // ÇÖZÜM: Ekran boyutunu dinamik ve güvenli almak için GeometryReader kullanıyoruz
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 32) {
                     
-                    Text("GöreviO")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundStyle(Color.primaryText)
-                    
-                    Text("Saha Servis Yönetim Uygulaması")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.secondaryText)
-                }
-                .padding(.top, 60)
-                
-                // MARK: - Form
-                VStack(spacing: 16) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("E-Posta")
-                            .font(.caption)
-                            .foregroundStyle(Color.secondaryText)
-                        TextField("ornek@gorevio.com", text: $email)
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .padding()
-                            .background(Color.cardBackground)
-                            .cornerRadius(12)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Şifre")
-                            .font(.caption)
-                            .foregroundStyle(Color.secondaryText)
-                        SecureField("••••••••", text: $password)
-                            .padding()
-                            .background(Color.cardBackground)
-                            .cornerRadius(12)
-                    }
-                }
-                .padding(.horizontal)
-                
-                // MARK: - Hata
-                if showError {
-                    Text(errorMessage)
-                        .font(.subheadline)
-                        .foregroundStyle(.red)
-                        .padding(.horizontal)
-                }
-                
-                // MARK: - Giriş Butonu
-                Button {
-                    _Concurrency.Task { await login() }
-                } label: {
-                    if isLoading {
-                        ProgressView()
-                            .tint(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.accent)
-                            .cornerRadius(16)
-                    } else {
-                        Text("Giriş Yap")
-                            .font(.body)
+                    // MARK: - Logo
+                    VStack(spacing: 12) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.accent.opacity(0.15))
+                                .frame(width: 100, height: 100)
+                            Text("G")
+                                .font(.system(size: 48, weight: .bold))
+                                .foregroundStyle(Color.accent)
+                        }
+                        
+                        Text("GöreviO")
+                            .font(.largeTitle)
                             .bold()
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(isFormValid ? Color.accent : Color.secondaryText)
-                            .cornerRadius(16)
+                            .foregroundStyle(Color.primaryText)
+                        
+                        Text("Saha Servis Yönetim Uygulaması")
+                            .font(.subheadline)
+                            .foregroundStyle(Color.secondaryText)
                     }
+                    .padding(.top, 60)
+                    
+                    // MARK: - Form
+                    VStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("E-Posta")
+                                .font(.caption)
+                                .foregroundStyle(Color.secondaryText)
+                            TextField("ornek@gorevio.com", text: $email)
+                                .keyboardType(.emailAddress)
+                                .autocapitalization(.none)
+                                .padding()
+                                .background(Color.cardBackground)
+                                .cornerRadius(12)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Şifre")
+                                .font(.caption)
+                                .foregroundStyle(Color.secondaryText)
+                            SecureField("••••••••", text: $password)
+                                .padding()
+                                .background(Color.cardBackground)
+                                .cornerRadius(12)
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // MARK: - Hata
+                    if showError {
+                        Text(errorMessage)
+                            .font(.subheadline)
+                            .foregroundStyle(.red)
+                            .padding(.horizontal)
+                    }
+                    
+                    // MARK: - Giriş Butonu
+                    Button {
+                        _Concurrency.Task { await login() }
+                    } label: {
+                        if isLoading {
+                            ProgressView()
+                                .tint(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.accent)
+                                .cornerRadius(16)
+                        } else {
+                            Text("Giriş Yap")
+                                .font(.body)
+                                .bold()
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(isFormValid ? Color.accent : Color.secondaryText)
+                                .cornerRadius(16)
+                        }
+                    }
+                    .disabled(!isFormValid || isLoading)
+                    .padding(.horizontal)
+                    
+                    Spacer(minLength: 40) // Buton ile imza arasına esnek boşluk
+                    
+                    // MARK: - Footer (Sayfa Altı İmza)
+                    VStack(spacing: 4) {
+                        Text("Created By: Bilal Zeyd Kılıç")
+                            .font(.footnote)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                        
+                        Text("Versiyon: v1.0")
+                            .font(.caption2)
+                            .foregroundColor(.secondary.opacity(0.8))
+                    }
+                    .padding(.bottom, 20)
+                    
                 }
-                .disabled(!isFormValid || isLoading)
-                .padding(.horizontal)
+                // ARTIK UYARI YOK: UIScreen.main yerine GeometryReader'ın verdiği yüksekliği kullanıyoruz
+                .frame(minHeight: geometry.size.height)
             }
         }
         .background(Color.appBackground)

@@ -18,7 +18,6 @@ struct TaskDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 
-                // MARK: - Durum
                 HStack {
                     Circle()
                         .fill(statusColor)
@@ -29,7 +28,6 @@ struct TaskDetailView: View {
                 }
                 .padding(.horizontal)
                 
-                // MARK: - Firma
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Firma")
                         .font(.caption)
@@ -42,7 +40,6 @@ struct TaskDetailView: View {
                 
                 Divider()
                 
-                // MARK: - Adres
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Adres")
                         .font(.caption)
@@ -54,7 +51,6 @@ struct TaskDetailView: View {
                 
                 Divider()
                 
-                // MARK: - Arıza
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Arıza Açıklaması")
                         .font(.caption)
@@ -66,7 +62,6 @@ struct TaskDetailView: View {
                 
                 Divider()
                 
-                // MARK: - Tarih
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Oluşturulma Tarihi")
                         .font(.caption)
@@ -76,7 +71,6 @@ struct TaskDetailView: View {
                 }
                 .padding(.horizontal)
                 
-                // MARK: - Tamamla Butonu
                 if task.status != "tamamlandi" {
                     Button {
                         showAlert = true
