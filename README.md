@@ -1,15 +1,13 @@
 # 📱 GöreviO - Teknik Servis Yönetim Sistemi
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/bilalzeydkilic/">
-    <img src="https://github-readme-stats.vercel.app/api?username=BilalZeydKlc&show_icons=true&theme=radical&count_private=true" alt="Bilal Zeyd Kilic GitHub Stats" />
-  </a>
+  <img src="https://img.shields.io/badge/Swift-5.10-orange.svg" />
+  <img src="https://img.shields.io/badge/SwiftUI-Framework-blue.svg" />
+  <img src="https://img.shields.io/badge/Backend-Node.js-green.svg" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-brightgreen.svg" />
 </p>
 
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=BilalZeydKlc&layout=compact&theme=radical&hide=html,css" alt="Top Languages" />
-</p>
-
+---
 ---
 
 ### 🛠️ Teknik Altyapı ve Mimari
