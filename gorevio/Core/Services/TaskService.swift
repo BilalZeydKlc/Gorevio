@@ -81,7 +81,7 @@ class TaskService: ObservableObject {
         // Üst Başlık
         content.title = "Yeni Görev Atandı! 🛠️"
         
-        // Alt Başlık (İstediğin şekilde güncellendi)
+        // Alt Başlık
         content.body = "Yeni atanan görevinizi görmek için dokunun."
         
         content.sound = .default

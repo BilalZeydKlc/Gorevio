@@ -19,8 +19,12 @@ class PersonnelService: ObservableObject {
     func fetchPersonnel() async throws {
         DispatchQueue.main.async { self.isLoading = true }
         let list: [APIPersonnel] = try await NetworkManager.shared.get(endpoint: "/api/personnel")
+        
         DispatchQueue.main.async {
-            self.personnelList = list
+            // 1. Verileri çektikten sonra Türkçe karakterlere uygun A-Z sıralaması yapıyoruz
+            self.personnelList = list.sorted {
+                $0.name.localizedStandardCompare($1.name) == .orderedAscending
+            }
             self.isLoading = false
         }
     }
@@ -36,6 +40,11 @@ class PersonnelService: ObservableObject {
         DispatchQueue.main.async {
             let newPerson = APIPersonnel(id: response.id, name: response.name, email: response.email, role: response.role)
             self.personnelList.append(newPerson)
+            
+            // 3. Yeni kişi eklendikten sonra listeyi tekrar alfabetik olarak diziyoruz
+            self.personnelList.sort {
+                $0.name.localizedStandardCompare($1.name) == .orderedAscending
+            }
         }
     }
     
@@ -50,6 +59,11 @@ class PersonnelService: ObservableObject {
         DispatchQueue.main.async {
             let newPerson = APIPersonnel(id: response.id, name: response.name, email: response.email, role: response.role)
             self.personnelList.append(newPerson)
+            
+            // Yeni kişi eklendikten sonra listeyi tekrar alfabetik olarak diziyoruz
+            self.personnelList.sort {
+                $0.name.localizedStandardCompare($1.name) == .orderedAscending
+            }
         }
     }
     

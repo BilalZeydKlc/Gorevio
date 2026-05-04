@@ -17,7 +17,6 @@ struct LoginView: View {
     @State private var errorMessage = ""
     
     var body: some View {
-        // ÇÖZÜM: Ekran boyutunu dinamik ve güvenli almak için GeometryReader kullanıyoruz
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 32) {
@@ -103,7 +102,7 @@ struct LoginView: View {
                     .disabled(!isFormValid || isLoading)
                     .padding(.horizontal)
                     
-                    Spacer(minLength: 40) // Buton ile imza arasına esnek boşluk
+                    Spacer(minLength: 40)
                     
                     // MARK: - Footer (Sayfa Altı İmza)
                     VStack(spacing: 4) {
@@ -111,15 +110,10 @@ struct LoginView: View {
                             .font(.footnote)
                             .fontWeight(.medium)
                             .foregroundColor(.secondary)
-                        
-                        Text("Versiyon: v1.0")
-                            .font(.caption2)
-                            .foregroundColor(.secondary.opacity(0.8))
                     }
                     .padding(.bottom, 20)
                     
                 }
-                // ARTIK UYARI YOK: UIScreen.main yerine GeometryReader'ın verdiği yüksekliği kullanıyoruz
                 .frame(minHeight: geometry.size.height)
             }
         }

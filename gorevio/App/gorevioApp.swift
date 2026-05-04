@@ -26,7 +26,7 @@ struct gorevioApp: App {
     private let delegate = NotificationDelegate()
     
     init() {
-        
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted { print("Bildirim izni verildi ✅") }
         }
@@ -36,22 +36,25 @@ struct gorevioApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if authService.isLoggedIn {
-                if authService.isAdmin {
-                    AdminTabView()
-                        .environmentObject(authService)
-                        .environmentObject(taskService)
-                        .environmentObject(companyService)
-                        .environmentObject(personnelService)
+            Group {
+                if authService.isLoggedIn {
+                    if authService.isAdmin {
+                        AdminTabView()
+                            .environmentObject(authService)
+                            .environmentObject(taskService)
+                            .environmentObject(companyService)
+                            .environmentObject(personnelService)
+                    } else {
+                        PersonnelTabView()
+                            .environmentObject(authService)
+                            .environmentObject(taskService)
+                    }
                 } else {
-                    PersonnelTabView()
+                    LoginView()
                         .environmentObject(authService)
-                        .environmentObject(taskService)
                 }
-            } else {
-                LoginView()
-                    .environmentObject(authService)
             }
+            .preferredColorScheme(.light)
         }
     }
 }

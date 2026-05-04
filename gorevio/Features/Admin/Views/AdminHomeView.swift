@@ -12,9 +12,10 @@ struct AdminHomeView: View {
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var taskService: TaskService
     
+    // "bekliyor" ve "devamEdiyor" durumlarını birleştirdik
+    var activeTasks: Int { taskService.tasks.filter { $0.status == "devamEdiyor" || $0.status == "bekliyor" }.count }
     var completedTasks: Int { taskService.tasks.filter { $0.status == "tamamlandi" }.count }
-    var activeTasks: Int { taskService.tasks.filter { $0.status == "devamEdiyor" }.count }
-    var pendingTasks: Int { taskService.tasks.filter { $0.status == "bekliyor" }.count }
+    var totalTasks: Int { taskService.tasks.count }
     
     var body: some View {
         NavigationStack {
@@ -34,8 +35,8 @@ struct AdminHomeView: View {
                         .padding(.horizontal)
                     
                     HStack(spacing: 12) {
+                        StatCardView(count: totalTasks, title: "Toplam", color: .purple)
                         StatCardView(count: activeTasks, title: "Devam Eden", color: .blue)
-                        StatCardView(count: pendingTasks, title: "Bekleyen", color: .orange)
                         StatCardView(count: completedTasks, title: "Tamamlanan", color: .green)
                     }
                     .padding(.horizontal)
@@ -48,8 +49,12 @@ struct AdminHomeView: View {
                     
                     VStack(spacing: 12) {
                         ForEach(taskService.tasks.prefix(3)) { task in
-                            TaskRowView(task: task)
-                                .padding(.horizontal)
+                            // ÇÖZÜM BURADA: Kartı tıklanabilir bir NavigationLink içine aldık
+                            NavigationLink(destination: TaskDetailView(task: task)) {
+                                TaskRowView(task: task)
+                            }
+                            .buttonStyle(.plain) // Tıklanabilir olunca yazıların maviye dönmesini engeller
+                            .padding(.horizontal)
                         }
                     }
                 }

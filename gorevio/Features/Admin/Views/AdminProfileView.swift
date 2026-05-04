@@ -85,7 +85,7 @@ struct AdminProfileView: View {
                                 .fontWeight(.medium)
                                 .foregroundColor(.secondary)
                             
-                            Text("Versiyon: v1.0")
+                            Text("Versiyon: \(Bundle.main.releaseVersionNumber ?? "1.0").\(Bundle.main.buildVersionNumber ?? "0")")
                                 .font(.caption2)
                                 .foregroundColor(.secondary.opacity(0.8))
                         }

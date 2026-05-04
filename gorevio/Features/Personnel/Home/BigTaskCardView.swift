@@ -42,7 +42,7 @@ struct BigTaskCardView: View {
             Divider()
                 .background(Color.divider)
             
-            // MARK: - Arıza
+            // MARK: - Arıza Açıklaması
             VStack(alignment: .leading, spacing: 6) {
                 Text("Arıza")
                     .font(.caption)
@@ -53,15 +53,9 @@ struct BigTaskCardView: View {
                     .lineLimit(3)
             }
             
-            // MARK: - Tarih & Detay
+            // MARK: - Sadece Detay Butonu (Tarih Kaldırıldı)
             HStack {
-                Image(systemName: "calendar")
-                    .foregroundStyle(Color.secondaryText)
-                Text(task.createdAt)
-                    .font(.caption)
-                    .foregroundStyle(Color.secondaryText)
-                
-                Spacer()
+                Spacer() // İçeriği tamamen sağa yaslar
                 
                 Text("Detay →")
                     .font(.caption)

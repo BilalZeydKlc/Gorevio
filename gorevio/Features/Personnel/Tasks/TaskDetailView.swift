@@ -11,6 +11,7 @@ struct TaskDetailView: View {
     
     let task: APITask
     @EnvironmentObject var taskService: TaskService
+    @EnvironmentObject var authService: AuthService
     @Environment(\.dismiss) var dismiss
     @State private var showAlert = false
     
@@ -18,6 +19,7 @@ struct TaskDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 
+                // Durum Göstergesi (Mavi/Yeşil)
                 HStack {
                     Circle()
                         .fill(statusColor)
@@ -28,6 +30,7 @@ struct TaskDetailView: View {
                 }
                 .padding(.horizontal)
                 
+                // Firma Bilgisi
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Firma")
                         .font(.caption)
@@ -40,6 +43,7 @@ struct TaskDetailView: View {
                 
                 Divider()
                 
+                // Adres Bilgisi
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Adres")
                         .font(.caption)
@@ -51,6 +55,7 @@ struct TaskDetailView: View {
                 
                 Divider()
                 
+                // Arıza Açıklaması
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Arıza Açıklaması")
                         .font(.caption)
@@ -60,35 +65,65 @@ struct TaskDetailView: View {
                 }
                 .padding(.horizontal)
                 
+                // MARK: - Atanan Personel (SADECE YÖNETİCİ GÖRÜR)
+                if authService.currentUser?.role != "personel" {
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Atanan Personel")
+                            .font(.caption)
+                            .foregroundStyle(Color.secondaryText)
+                        
+                        HStack {
+                            Image(systemName: "person.crop.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(Color.accent)
+                            
+                            Text(task.assignedTo.name)
+                                .font(.body)
+                                .bold()
+                                .foregroundStyle(Color.primaryText)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                
                 Divider()
                 
+                // Oluşturulma Tarihi (Formatlanmış hali)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Oluşturulma Tarihi")
                         .font(.caption)
                         .foregroundStyle(Color.secondaryText)
-                    Text(task.createdAt)
+                    
+                    Text(formatDate(task.createdAt))
                         .font(.body)
                 }
                 .padding(.horizontal)
                 
+                // Buton Alanı
                 if task.status != "tamamlandi" {
-                    Button {
-                        showAlert = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Tamamlandı Olarak İşaretle")
-                                .bold()
+                    // Sadece personelse butonu gösteriyoruz
+                    if authService.currentUser?.role == "personel" {
+                        Button {
+                            showAlert = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                Text("Tamamlandı Olarak İşaretle")
+                                    .bold()
+                            }
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .cornerRadius(14)
                         }
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .cornerRadius(14)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 8)
                 } else {
+                    // İş tamamlandıysa herkese yeşil badge göster
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
                         Text("Tamamlandı")
@@ -121,9 +156,11 @@ struct TaskDetailView: View {
         }
     }
     
+    // MARK: - Yardımcı Fonksiyonlar
+    
     var statusColor: Color {
         switch task.status {
-        case "bekliyor", "devamEdiyor": return .blue // İkisi de mavi oldu
+        case "bekliyor", "devamEdiyor": return .blue
         case "tamamlandi": return .green
         default: return .gray
         }
@@ -131,9 +168,23 @@ struct TaskDetailView: View {
     
     var statusText: String {
         switch task.status {
-        case "bekliyor", "devamEdiyor": return "Devam Ediyor" // İkisi de Devam Ediyor yazacak
+        case "bekliyor", "devamEdiyor": return "Devam Ediyor"
         case "tamamlandi": return "Tamamlandı"
         default: return "Bilinmiyor"
         }
+    }
+    
+    // Tarih Formatlayıcı
+    func formatDate(_ dateString: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        if let date = formatter.date(from: dateString) {
+            let displayFormatter = DateFormatter()
+            displayFormatter.dateFormat = "dd MMMM yyyy, HH:mm"
+            displayFormatter.locale = Locale(identifier: "tr_TR")
+            return displayFormatter.string(from: date)
+        }
+        return dateString
     }
 }
