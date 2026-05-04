@@ -55,6 +55,16 @@ struct gorevioApp: App {
                 }
             }
             .preferredColorScheme(.light)
+            .onAppear {
+                // UYGULAMA AÇILDIĞINDA BİLDİRİM SAYISINI SIFIRLA
+                UNUserNotificationCenter.current().setBadgeCount(0) { error in
+                    if let error = error {
+                        print("Badge sıfırlanırken hata oluştu: \(error.localizedDescription)")
+                    } else {
+                        print("Bildirim sayısı başarıyla sıfırlandı 🧹")
+                    }
+                }
+            }
         }
     }
 }
