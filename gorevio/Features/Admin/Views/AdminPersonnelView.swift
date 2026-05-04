@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AdminPersonnelView: View {
     @EnvironmentObject var personnelService: PersonnelService
+    @EnvironmentObject var taskService: TaskService
     @State private var showNewPersonnel = false
     
     var body: some View {
@@ -24,16 +25,42 @@ struct AdminPersonnelView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(Color.secondaryText)
                         }
+                        
                         Spacer()
                         
-                        Text(personnel.role.capitalized)
-                            .font(.caption)
-                            .bold()
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(personnel.role == "admin" ? Color.accent.opacity(0.15) : Color.blue.opacity(0.15))
-                            .foregroundStyle(personnel.role == "admin" ? Color.accent : Color.blue)
-                            .cornerRadius(8)
+                        // SADELEŞTİRİLMİŞ SAĞ TARAF (Sadece İş Durumu veya Yönetici Rozeti)
+                        if personnel.role == "admin" {
+                            Text("Yönetici")
+                                .font(.caption)
+                                .bold()
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background(Color.accent.opacity(0.15))
+                                .foregroundStyle(Color.accent)
+                                .cornerRadius(8)
+                        } else {
+                            let aktifIsSayisi = getActiveTaskCount(for: personnel.id)
+                            
+                            if aktifIsSayisi > 0 {
+                                Text("\(aktifIsSayisi) Aktif İş")
+                                    .font(.caption)
+                                    .bold()
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                    .background(Color.orange.opacity(0.15))
+                                    .foregroundStyle(Color.orange)
+                                    .cornerRadius(8)
+                            } else {
+                                Text("Müsait")
+                                    .font(.caption)
+                                    .bold()
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                    .background(Color.green.opacity(0.15))
+                                    .foregroundStyle(Color.green)
+                                    .cornerRadius(8)
+                            }
+                        }
                     }
                     .padding(.vertical, 4)
                 }
@@ -59,8 +86,14 @@ struct AdminPersonnelView: View {
             }
             .task {
                 try? await personnelService.fetchPersonnel()
+                try? await taskService.fetchAllTasks()
             }
         }
+    }
+    
+    // HESAPLAMA YÜKÜNÜ BURAYA ALDIK
+    private func getActiveTaskCount(for personnelId: String) -> Int {
+        return taskService.tasks.filter { $0.assignedTo.id == personnelId && $0.status != "tamamlandi" }.count
     }
     
     private func deletePersonnel(at offsets: IndexSet) {
@@ -68,15 +101,9 @@ struct AdminPersonnelView: View {
         personnelService.personnelList.remove(atOffsets: offsets)
         
         for id in idsToDelete {
-            // İŞTE SİHİRLİ DOKUNUŞ BURADA: Kendi Task modelinle karışmasını engelliyoruz
             _Concurrency.Task {
                 try? await personnelService.deletePersonnel(id: id)
             }
         }
     }
-}
-
-#Preview {
-    AdminPersonnelView()
-        .environmentObject(PersonnelService.shared)
 }
