@@ -84,7 +84,7 @@ struct PersonnelProfileView: View {
                         
                         Spacer(minLength: 30) // İmza için boşluk bırak
                         
-                        // MARK: - Footer (Sayfa Altı İmza)
+                        // Footer (Sayfa Altı İmza)
                         VStack(spacing: 4) {
                             Text("Created By: Bilal Zeyd Kılıç")
                                 .font(.footnote)

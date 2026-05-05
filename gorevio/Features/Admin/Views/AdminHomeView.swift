@@ -49,11 +49,11 @@ struct AdminHomeView: View {
                     
                     VStack(spacing: 12) {
                         ForEach(taskService.tasks.prefix(3)) { task in
-                            // ÇÖZÜM BURADA: Kartı tıklanabilir bir NavigationLink içine aldık
+                            // Kartı tıklanabilir bir NavigationLink içine aldık
                             NavigationLink(destination: TaskDetailView(task: task)) {
                                 TaskRowView(task: task)
                             }
-                            .buttonStyle(.plain) // Tıklanabilir olunca yazıların maviye dönmesini engeller
+                            .buttonStyle(.plain)
                             .padding(.horizontal)
                         }
                     }

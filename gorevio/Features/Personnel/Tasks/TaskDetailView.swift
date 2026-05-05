@@ -65,7 +65,7 @@ struct TaskDetailView: View {
                 }
                 .padding(.horizontal)
                 
-                // MARK: - Atanan Personel (SADECE YÖNETİCİ GÖRÜR)
+                // Atanan PersoneL
                 if authService.currentUser?.role != "personel" {
                     Divider()
                     
@@ -123,7 +123,7 @@ struct TaskDetailView: View {
                         .padding(.top, 8)
                     }
                 } else {
-                    // İş tamamlandıysa herkese yeşil badge göster
+                    // İş tamamlandıysa herkese yeşil göster
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
                         Text("Tamamlandı")
@@ -156,7 +156,7 @@ struct TaskDetailView: View {
         }
     }
     
-    // MARK: - Yardımcı Fonksiyonlar
+    // Yardımcı Fonksiyonlar
     
     var statusColor: Color {
         switch task.status {

@@ -21,7 +21,7 @@ struct LoginView: View {
             ScrollView {
                 VStack(spacing: 32) {
                     
-                    // MARK: - Logo
+                    // Logo
                     VStack(spacing: 12) {
                         ZStack {
                             Circle()
@@ -43,7 +43,7 @@ struct LoginView: View {
                     }
                     .padding(.top, 60)
                     
-                    // MARK: - Form
+                    // Form
                     VStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("E-Posta")
@@ -69,7 +69,7 @@ struct LoginView: View {
                     }
                     .padding(.horizontal)
                     
-                    // MARK: - Hata
+                    // Hata
                     if showError {
                         Text(errorMessage)
                             .font(.subheadline)
@@ -77,7 +77,7 @@ struct LoginView: View {
                             .padding(.horizontal)
                     }
                     
-                    // MARK: - Giriş Butonu
+                    // Giriş Butonu
                     Button {
                         _Concurrency.Task { await login() }
                     } label: {
@@ -104,7 +104,7 @@ struct LoginView: View {
                     
                     Spacer(minLength: 40)
                     
-                    // MARK: - Footer (Sayfa Altı İmza)
+                    // Footer (Sayfa Altı İmza)
                     VStack(spacing: 4) {
                         Text("Created By: Bilal Zeyd Kılıç")
                             .font(.footnote)

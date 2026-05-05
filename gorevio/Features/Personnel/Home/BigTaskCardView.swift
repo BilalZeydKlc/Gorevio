@@ -14,7 +14,7 @@ struct BigTaskCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
-            // MARK: - Üst Kısım
+            // Üst Kısım
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(task.companyName)
@@ -42,7 +42,7 @@ struct BigTaskCardView: View {
             Divider()
                 .background(Color.divider)
             
-            // MARK: - Arıza Açıklaması
+            // Arıza Açıklaması
             VStack(alignment: .leading, spacing: 6) {
                 Text("Arıza")
                     .font(.caption)
@@ -53,7 +53,7 @@ struct BigTaskCardView: View {
                     .lineLimit(3)
             }
             
-            // MARK: - Sadece Detay Butonu (Tarih Kaldırıldı)
+            // Sadece Detay Butonu
             HStack {
                 Spacer() // İçeriği tamamen sağa yaslar
                 

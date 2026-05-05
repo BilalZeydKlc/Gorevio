@@ -81,7 +81,7 @@ struct PersonnelHomeView: View {
                 }
             }
             .onReceive(timer) { _ in
-                // ÇAKIŞMAYI ÖNLEYEN KRİTİK DEĞİŞİKLİK: _Concurrency.Task
+                // ÇAKIŞMAYI ÖNLEMEK
                 _Concurrency.Task {
                     if let userId = authService.currentUser?.id {
                         try? await taskService.fetchPersonnelTasks(personnelId: userId)

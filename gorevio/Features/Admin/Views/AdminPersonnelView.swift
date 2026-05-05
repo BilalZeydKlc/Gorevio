@@ -91,7 +91,7 @@ struct AdminPersonnelView: View {
         }
     }
     
-    // HESAPLAMA YÜKÜNÜ BURAYA ALDIK
+    // HESAPLAMA
     private func getActiveTaskCount(for personnelId: String) -> Int {
         return taskService.tasks.filter { $0.assignedTo.id == personnelId && $0.status != "tamamlandi" }.count
     }

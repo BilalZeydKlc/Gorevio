@@ -18,7 +18,7 @@ struct AdminNewTaskView: View {
     @State private var selectedCompany: APICompany? = nil
     @State private var selectedPersonnel: APIPersonnel? = nil
     
-    // ARAMA ÇUBUĞU İÇİN YENİ STATE'LER
+    // ARAMA ÇUBUĞU İÇİN YENİ STATE
     @State private var companySearchText = ""
     @State private var personnelSearchText = ""
     
@@ -58,7 +58,7 @@ struct AdminNewTaskView: View {
                                 .background(Color.cardBackground)
                                 .onTapGesture {
                                     selectedCompany = company
-                                    // Seçim yapılınca klavyeyi kapatılması için gerekli metdod
+                                    // Seçim yapılınca klavyeyi kapatılması için
                                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 }
                             }
@@ -66,7 +66,7 @@ struct AdminNewTaskView: View {
                         .cornerRadius(16).padding(.horizontal)
                     }
                     
-                    // MARK: - PERSONEL SEÇİMİ VE ARAMA
+                    // PERSONEL SEÇİMİ VE ARAMA
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Personel Seç").font(.caption).bold() .padding(.horizontal)
                         
@@ -122,7 +122,7 @@ struct AdminNewTaskView: View {
         }
     }
     
-    // MARK: - HESAPLANMIŞ ÖZELLİKLER (FİLTRELEME MANTIĞI)
+    // HESAPLANMIŞ ÖZELLİKLER (FİLTRELEME MANTIĞI)
     
     var isFormValid: Bool { !title.isEmpty && !description.isEmpty && selectedCompany != nil && selectedPersonnel != nil }
     
@@ -145,7 +145,7 @@ struct AdminNewTaskView: View {
         }
     }
     
-    // MARK: - FONKSİYONLAR
+    // FONKSİYONLAR
     
     func addTask() async {
         guard let company = selectedCompany, let personnel = selectedPersonnel else { return }

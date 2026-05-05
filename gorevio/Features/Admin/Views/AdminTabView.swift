@@ -37,11 +37,3 @@ struct AdminTabView: View {
         }
     }
 }
-
-#Preview {
-    AdminTabView()
-        .environmentObject(AuthService.shared)
-        .environmentObject(TaskService.shared)
-        .environmentObject(CompanyService.shared)
-        .environmentObject(PersonnelService.shared)
-}
