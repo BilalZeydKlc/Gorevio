@@ -16,7 +16,7 @@ struct AdminTasksView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 12) {
-                    // Mevcut tüm görevleri listeler
+                    // Mevcut tüm görevler
                     ForEach(taskService.tasks) { task in
                         TaskRowView(task: task)
                     }
@@ -42,7 +42,7 @@ struct AdminTasksView: View {
                     }
                 }
             }
-            // Yeni görev ekleme formunu modal (sheet) olarak açar
+            // Yeni görev ekleme sheet açılır
             .sheet(isPresented: $showNewTask) {
                 AdminNewTaskView()
                     .environmentObject(taskService)

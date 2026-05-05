@@ -78,7 +78,7 @@ struct AdminProfileView: View {
                         
                         Spacer(minLength: 30) // İmza için boşluk bırak
                         
-                        // MARK: - Footer (Sayfa Altı İmza)
+                        // Footer
                         VStack(spacing: 4) {
                             Text("Created By: Bilal Zeyd Kılıç")
                                 .font(.footnote)
@@ -92,7 +92,7 @@ struct AdminProfileView: View {
                         .padding(.bottom, 20)
                         
                     }
-                    .frame(minHeight: geometry.size.height) // Ekran yüksekliğini doldur
+                    .frame(minHeight: geometry.size.height) // Ekran yüksekliği tamamla
                 }
             }
             .background(Color.appBackground)

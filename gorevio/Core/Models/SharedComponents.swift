@@ -64,6 +64,7 @@ struct InputFieldView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.caption)
+                .fontWeight(.bold)
                 .foregroundStyle(Color.secondaryText)
             TextField(placeholder, text: $text)
                 .padding()

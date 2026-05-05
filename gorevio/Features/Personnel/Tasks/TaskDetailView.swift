@@ -19,7 +19,7 @@ struct TaskDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 
-                // Durum Göstergesi (Mavi/Yeşil)
+                // Durum Göstergesi
                 HStack {
                     Circle()
                         .fill(statusColor)
